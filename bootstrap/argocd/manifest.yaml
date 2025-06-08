@@ -26652,7 +26652,10 @@ spec:
       - $values/apps/infra/cert-manager/values.yaml
     repoURL: https://charts.jetstack.io
     targetRevision: v1.17.2
-  - ref: values
+  - directory:
+      include: '*.yaml'
+    path: apps/infra/cert-manager
+    ref: values
     repoURL: https://github.com/depp57/homelab-talos
 ---
 apiVersion: argoproj.io/v1alpha1
