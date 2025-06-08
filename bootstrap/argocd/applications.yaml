@@ -33,6 +33,9 @@ spec:
         valueFiles:
           - $values/apps/infra/cert-manager/values.yaml
     - repoURL: https://github.com/depp57/homelab-talos
+      path: apps/infra/cert-manager
+      directory:
+        include: '*.yaml'
       ref: values
   destination:
     server: "https://kubernetes.default.svc"
