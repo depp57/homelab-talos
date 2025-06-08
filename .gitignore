@@ -1,2 +1,5 @@
 # IDE
 .idea
+
+# Talos secrets
+talos/clusterconfig
