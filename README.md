@@ -2,6 +2,22 @@
 
 This repository contains the configuration of my kubernetes homelab running on [Talos](https://www.talos.dev/).
 
+```
+apps            // applications manifests/helm charts, deployed via gitops
+│   ...
+│
+└───infra       // infrastructure/system related applications (ingress-controller, storage ...)
+│   │ ...
+│
+│
+└───bootstrap   // applications required during the bootstraping (argocd ...).
+│   │ ...
+│
+│
+talos           // talos OS configuration
+│   ...
+```
+
 ## Preamble
 
 My previous iteration of this cluster, also using GitOps can be found at `https://github.com/depp57/ops`.
