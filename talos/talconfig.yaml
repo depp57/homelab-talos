@@ -29,6 +29,8 @@ nodes:
                 - rw
 
 controlPlane:
+  extraManifests:
+    - ../bootstrap/argocd/manifest.yaml
   patches:
     - |-
       - op: replace
