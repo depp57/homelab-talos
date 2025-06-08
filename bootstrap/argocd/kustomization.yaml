@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/refs/heads/master/manifests/install.yaml
   - ingress.yaml
+  - applications.yaml
 
 patches:
   - patch: |-
