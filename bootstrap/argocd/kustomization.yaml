@@ -6,7 +6,7 @@ resources:
   - namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/refs/heads/master/manifests/install.yaml
   - ingress.yaml
-  - applications.yaml
+  - applicationSet.yaml
 
 patches:
   - patch: |-
@@ -15,3 +15,4 @@ patches:
         value: argocd
     target:
       kind: ClusterRoleBinding
+  - path: argocd-cm-patch.yaml
