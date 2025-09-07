@@ -26707,6 +26707,10 @@ spec:
         repoURL: https://github.com/depp57/homelab-talos.git
         targetRevision: HEAD
       syncPolicy:
+        automated:
+          enabled: true
+          prune: true
+          selfHeal: false
         syncOptions:
         - CreateNamespace=true
 ---
@@ -26738,6 +26742,10 @@ spec:
         repoURL: https://github.com/depp57/homelab-talos.git
         targetRevision: HEAD
       syncPolicy:
+        automated:
+          enabled: true
+          prune: true
+          selfHeal: false
         syncOptions:
         - CreateNamespace=true
 ---
