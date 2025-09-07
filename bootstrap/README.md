@@ -4,9 +4,10 @@ I'm bootstrapping the cluster by using Talos's `extraManifest` to deploy manifes
 
 *talos/talconfig.yaml*
 ```yaml
-controlPlane:
-  extraManifests:
-    - ../bootstrap/argocd/manifest.yaml
+inlineManifests:
+  - name: argocd
+    contents: "@../bootstrap/argocd/manifest.yaml"
+    skipEnvsubst: true
 ```
 
 This installs ArgoCD, which then takes over to deploy the remaining manifests from the Git repo.

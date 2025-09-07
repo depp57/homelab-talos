@@ -1,14 +1,19 @@
 clusterName: homelab
 endpoint: https://192.168.1.10:6443
 allowSchedulingOnMasters: true
+talosVersion: v1.11.0
+inlineManifests:
+  - name: argocd
+    contents: "@../bootstrap/argocd/manifest.yaml"
+    skipEnvsubst: true
 
 nodes:
   - hostname: server1
     controlPlane: true
     ipAddress: 192.168.1.10
     installDisk: /dev/nvme0n1
-    nodeLabels:
-      storage: ""
+    machineSpec:
+      secureboot: true
     schematic:
       customization:
         systemExtensions:
@@ -27,12 +32,7 @@ nodes:
                 - bind
                 - rshared
                 - rw
-
-controlPlane:
-  extraManifests:
-    - ../bootstrap/argocd/manifest.yaml
-  patches:
-    - |-
-      - op: replace
-        path: /machine/install/wipe
-        value: true
+      - |-
+        - op: replace
+          path: /machine/install/wipe
+          value: true

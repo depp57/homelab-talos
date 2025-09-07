@@ -1,22 +1,10 @@
+<div align="center">
+
 # homelab-talos
 
 This repository contains the configuration of my kubernetes homelab running on [Talos](https://www.talos.dev/).
 
-```
-apps            // applications manifests/helm charts, deployed via gitops
-│   ...
-│
-└───infra       // infrastructure/system related applications (ingress-controller, storage ...)
-│   │ ...
-│
-│
-└───bootstrap   // applications required during the bootstraping (argocd ...).
-│   │ ...
-│
-│
-talos           // talos OS configuration
-│   ...
-```
+</div>
 
 ## Preamble
 
@@ -38,6 +26,75 @@ I made three major mistakes:
   Now, the repository is saturated with secrets, preventing me from making it public without first rewriting the entire Git history.
 
 </details>
+
+## Folder structure
+
+```shell
+├── 📂 doc          # Documentation
+├── 📂 apps         # Applications
+│   └── 📂 infra    # Infrastructure/system related apps (storage, ingress-controller, ...)
+├── 📂 bootstrap    # Kubernetes bootstrap config
+└── 📂 talos        # Talos OS configuration
+```
+
+## Deployment
+
+I try to automate almost everything, keeping the deployment as simple as possible.
+
+```shell
+# 1. Clone the repo
+git clone https://github.com/depp57/homelab-talos.git
+
+# 2. Install the required tools:
+#   - talosctl: Official Talos CLI
+#       https://www.talos.dev/v1.11/talos-guides/install/talosctl/
+#   - talhelper: Manage Talos configs declaratively
+#       https://budimanjojo.github.io/talhelper/latest/installation/
+#   - sops: Manage secrets in config files
+#       https://github.com/getsops/sops/releases
+
+# 3. Download the Talos Linux ISO with the required extensions (bare metal, amd64, secure boot enabled)
+wget https://factory.talos.dev/image/613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245/v1.11.0/metal-amd64-secureboot.iso
+
+#   - Alternatively, you can download a base ISO without extensions here:
+#       https://factory.talos.dev/
+#   - Missing extensions will be automatically downloaded during step 7.
+
+# 4. Boot your hardware using the ISO you just downloaded
+#   Ensure secureboot is in 'setup' mode before booting Talos. The ISO bootloader will enroll the keys in the UEFI firmware
+
+# 5. Once you'll see the Talos dashboard, unmount the ISO or unplug the USB drive
+#   This prevents you from accidentally installing to the USB drive
+
+# 6. List your disks, and choose which one to use for the installation
+talosctl get disks --insecure --nodes <ip_address>
+#   Then update ./talos/talconfig.yaml -> nodes.installDisk accordingly.
+
+# 7. Generate and apply Talos config
+cd talos
+talhelper gensecret > talsecret.sops.yaml && sops -e -i talsecret.sops.yaml
+talhelper genconfig
+talosctl apply-config --insecure -n <ip_address> -- file ./clusterconfig/homelab-server1.yaml
+
+# 8. Save Talos config locally to avoid repeating --node and --endpoint parameters
+talosctl config merge ./clusterconfig/talosconfig
+
+# 9. Bootstrap the etcd cluster
+talosctl bootstrap
+
+# 10. Get kubernetes access through kubectl, either:
+#   -> Merge your new cluster into your local Kubernetes configuration:
+talosctl kubeconfig
+#   -> Specify a filename if you prefer not to merge with your default Kubernetes configuration:
+talosctl kubeconfig alternative-kubeconfig-name
+```
+
+And voilà! You can now run kubectl commands.
+
+Thanks to `inlineManifests` defined in `./talos/talconfig.yaml`, **argoCD** is automatically deployed during bootstrapping.
+ArgoCD will then take care of installing all other apps in the cluster.
+
+In a few minutes, you'll get a running cluster with all workload up & running.
 
 ## Hardware
 
