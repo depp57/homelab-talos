@@ -6,9 +6,11 @@ resources:
 
 helmCharts:
   - name: cert-manager
-    namespace: infra-cert-manager
-    releaseName: cert-manager
-    repo: oci://quay.io/jetstack/charts/cert-manager
-    includeCRDs: true
+    repo: oci://quay.io/jetstack/charts
     version: v1.18.2
-    valuesFile: values.yaml
+    releaseName: cert-manager
+    namespace: infra-cert-manager
+    includeCRDs: true
+    valuesInline:
+      crds:
+        enabled: true
