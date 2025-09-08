@@ -8,9 +8,13 @@ inlineManifests:
   - name: argocd
     contents: "@../bootstrap/argocd/manifest.yaml"
     skipEnvsubst: true
+  - ...
 ```
 
 This installs ArgoCD, which then takes over to deploy the remaining manifests from the Git repo.
+
+Additionally, a Kubernetes Secret `bitwarden-access-token` is created during bootstrap.
+This secret is required by `External Secrets Operator` to fetch secrets, which in turn is necessary for running the other applications.
 
 ## Kustomization
 

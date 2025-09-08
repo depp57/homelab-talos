@@ -66,23 +66,26 @@ wget https://factory.talos.dev/image/613e1592b2da41ae5e265e8789429f22e121aab91cb
 # 5. Once you'll see the Talos dashboard, unmount the ISO or unplug the USB drive
 #   This prevents you from accidentally installing to the USB drive
 
-# 6. List your disks, and choose which one to use for the installation
+# 6. Decrypt (or create) the bitwarden-secret.sops.yaml file, used by External Secrets Operator
+sops decrypt bootstrap/external-secrets/bitwarden-secret.sops.yaml --output bootstrap/external-secrets/bitwarden-secret.yaml
+
+# 7. List your disks, and choose which one to use for the installation
 talosctl get disks --insecure --nodes <ip_address>
 #   Then update ./talos/talconfig.yaml -> nodes.installDisk accordingly.
 
-# 7. Generate and apply Talos config
+# 8. Generate and apply Talos config
 cd talos
-talhelper gensecret > talsecret.sops.yaml && sops -e -i talsecret.sops.yaml
-talhelper genconfig
+talhelper genconfig # Automatically uses talsecret.sops.yaml and decrypt it using sops
 talosctl apply-config --insecure -n <ip_address> -- file ./clusterconfig/homelab-server1.yaml
+cd ..
 
-# 8. Save Talos config locally to avoid repeating --node and --endpoint parameters
+# 9. Save Talos config locally to avoid repeating --node and --endpoint parameters
 talosctl config merge ./clusterconfig/talosconfig
 
-# 9. Bootstrap the etcd cluster
+# 10. Bootstrap the etcd cluster
 talosctl bootstrap
 
-# 10. Get kubernetes access through kubectl, either:
+# 11. Get kubernetes access through kubectl, either:
 #   -> Merge your new cluster into your local Kubernetes configuration:
 talosctl kubeconfig
 #   -> Specify a filename if you prefer not to merge with your default Kubernetes configuration:
@@ -93,6 +96,9 @@ And voilà! You can now run kubectl commands.
 
 Thanks to `inlineManifests` defined in `./talos/talconfig.yaml`, **argoCD** is automatically deployed during bootstrapping.
 ArgoCD will then take care of installing all other apps in the cluster.
+
+Additionally, a Kubernetes Secret `bitwarden-access-token` is created in the `infra-external-secrets` namespace, which is
+used by the operator to fetch secrets and create `Secret` from `ExternalSecret`.
 
 In a few minutes, you'll get a running cluster with all workload up & running.
 
@@ -107,3 +113,24 @@ Currently, it is a single-node cluster.
 ## Network diagram
 
 ![home network](doc/home-network.jpg)
+
+
+# TODO
+
+- think of a way to hide bot commits
+- Automatic update dependencies with renovate
+- explain DNS tricks for local LAN
+- documents metallb to enable service with type `LoadBalancer` (yes quite useless for a single node cluster)
+  - But still required, without that you will use service type `ClusterIp` but it only allows ports `30000+`
+- External Secrets Operator : delegates to a proper secret management tool (secret rotation, nice UI, etc.)
+  - infisical (free plan) (or bitwarden with https://bitwarden.com/products/secrets-manager/#pricing?)
+- auto backup etcd to s3 (explain why - longhorn storage)
+
+
+# Disaster recovery
+
+1. Plug USB key with ISO
+2. getting started talos recipe
+3. longhorn delete disk from node (UUID error)
+4. longhorn recreate same disk
+5. longhorn create disaster recovery volume

@@ -6,6 +6,9 @@ inlineManifests:
   - name: argocd
     contents: "@../bootstrap/argocd/manifest.yaml"
     skipEnvsubst: true
+  - name: external-secrets
+    contents: "@../bootstrap/external-secrets/bitwarden-secret.yaml"
+    skipEnvsubst: true
 
 nodes:
   - hostname: server1

@@ -3,3 +3,6 @@
 
 # Talos secrets
 talos/clusterconfig
+
+# Kubernetes secrets
+bootstrap/external-secrets/bitwarden-secret.yaml
