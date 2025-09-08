@@ -10,6 +10,9 @@ csi:
 defaultSettings:
   defaultReplicaCount: 1
 
+longhornUI:
+  replicas: 1
+
 ingress:
   enabled: true
   ingressClassName: nginx
