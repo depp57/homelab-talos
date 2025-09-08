@@ -68,9 +68,10 @@ spec:
         syncOptions:
           - CreateNamespace=true
   templatePatch: |
-    {{ - if eq .path.basename "external-secrets" }}
+    {{- if eq .path.basename "external-secrets" }}
     spec:
       syncPolicy:
         syncOptions:
+          - CreateNamespace=true
           - ServerSideApply=true
-    {{ - end }}
+    {{- end }}
