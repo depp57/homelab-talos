@@ -2,9 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-  - name: longhorn-storage
+  - name: longhorn
     repo: https://charts.longhorn.io
     version: 1.9.1
-    releaseName: longhorn
     namespace: infra-longhorn-storage
     valuesFile: values.yaml
