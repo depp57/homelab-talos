@@ -10,6 +10,9 @@ csi:
 defaultSettings:
   defaultReplicaCount: 1
 
+longhornUI:
+  replicas: 1
+
 ingress:
   enabled: true
   ingressClassName: nginx
@@ -20,5 +23,6 @@ ingress:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
+
 preUpgradeChecker:
   jobEnabled: false
