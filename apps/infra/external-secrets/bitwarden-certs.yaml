@@ -12,11 +12,11 @@
 #  +-------------------------------+
 #  |                |
 #  v                v
-#  +-------------------+  +-------------------+
-#  | Bitwarden SDK     |  | Bitwarden         |
-#  | Server Cert       |  | Secret Store      |
-#  | (bitwarden-tls)   |  | (bitwarden-client)|
-#  +-------------------+  +-------------------+
+#  +-------------------+
+#  | Bitwarden SDK     |
+#  | Server Cert       |
+#  | (bitwarden-tls)   |
+#  +-------------------+
 
 
 # Base self-signed issuer for the bootstrap certificate
@@ -64,6 +64,8 @@ spec:
     secretName: bitwarden-bootstrap-certs
 ---
 # Certificate for Bitwarden SDK server
+# Provided also to the external-secrets client, which is discouraged: https://cert-manager.io/docs/trust/
+# For simplicity, I still provide it while acknowledging the potential downsides.
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -81,26 +83,6 @@ spec:
     algorithm: RSA
     encoding: PKCS8
     size: 2048
-  issuerRef:
-    name: bitwarden-certificate-issuer
-    kind: Issuer
-    group: cert-manager.io
----
-# Client certificate for Bitwarden Cluster Secret Store
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: bitwarden-client-certs
-spec:
-  secretName: bitwarden-client-certs
-  dnsNames:
-    - bitwarden-secrets-manager.infra-external-secrets.svc.cluster.local
-  privateKey:
-    algorithm: RSA
-    encoding: PKCS8
-    size: 2048
-  usages:
-    - client auth
   issuerRef:
     name: bitwarden-certificate-issuer
     kind: Issuer
