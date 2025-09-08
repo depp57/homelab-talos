@@ -12,11 +12,11 @@
 #  +-------------------------------+
 #  |                |
 #  v                v
-#  +-------------------+
-#  | Bitwarden SDK     |
-#  | Server Cert       |
-#  | (bitwarden-tls)   |
-#  +-------------------+
+#  +-------------------+  +-------------------+
+#  | Bitwarden SDK     |  | Bitwarden         |
+#  | Server Cert       |  | Secret Store      |
+#  | (bitwarden-tls)   |  | (bitwarden-client)|
+#  +-------------------+  +-------------------+
 
 
 # Base self-signed issuer for the bootstrap certificate
@@ -39,8 +39,8 @@ spec:
     organizations:
       - external-secrets.io
   dnsNames:
-    - external-secrets-bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
     - bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
     - localhost
   ipAddresses:
     - 127.0.0.1
