@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
+  - basic-auth-secret.yaml
 
 helmCharts:
   - name: longhorn
