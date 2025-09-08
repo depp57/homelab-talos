@@ -26748,6 +26748,8 @@ spec:
           selfHeal: false
         syncOptions:
         - CreateNamespace=true
+  templatePatch: "{{ - if eq .path.basename \"external-secrets\" }}\nspec:\n  syncPolicy:\n
+    \   syncOptions:\n      - ServerSideApply=true \n{{ - end }}"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
