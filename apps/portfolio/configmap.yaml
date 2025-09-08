@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: portfolio
 data:
-  NEXT_PUBLIC_IS_OPEN_TO_WORK: true
+  NEXT_PUBLIC_IS_OPEN_TO_WORK: "true"
