@@ -26756,6 +26756,17 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
     {{- end }}
+
+    {{- if eq .path.basename "kubernetes-dashboard" }}
+    spec:
+      ignoreDifferences:
+        - group: ""
+          kind: Secret
+          name: kubernetes-dashboard-csrf
+          namespace: infra-kubernetes-dashboard
+          jsonPointers:
+            - /data/private.key
+    {{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
