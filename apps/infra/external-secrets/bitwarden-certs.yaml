@@ -51,7 +51,7 @@ spec:
     size: 2048
   issuerRef:
     name: bitwarden-bootstrap-issuer
-    kind: ClusterIssuer
+    kind: Issuer
     group: cert-manager.io
 ---
 # ClusterIssuer for Bitwarden using the self-signed certificate
@@ -83,5 +83,5 @@ spec:
     size: 2048
   issuerRef:
     name: bitwarden-certificate-issuer
-    kind: ClusterIssuer
+    kind: issuer
     group: cert-manager.io
