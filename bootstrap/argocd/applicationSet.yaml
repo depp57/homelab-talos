@@ -67,6 +67,7 @@ spec:
           - CreateNamespace=true
   # Custom patches per application.
   # external-secrets: "Our CRDs have reached the 256KB limit! You have to use server-side-apply in all locations to install them correctly."
+  # kubernetes-dashboard: The secret 'kubernetes-dashboard-csrf' is automatically updated after the deployment, causing an out-of-sync event
   templatePatch: |
     {{- if eq .path.basename "external-secrets" }}
     spec:
@@ -74,4 +75,15 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+    {{- end }}
+
+    {{- if eq .path.basename "kubernetes-dashboard" }}
+    spec:
+      ignoreDifferences:
+        - group: ""
+          kind: Secret
+          name: kubernetes-dashboard-csrf
+          namespace: infra-kubernetes-dashboard
+          jsonPointers:
+            - /data/private.key
     {{- end }}
