@@ -12,3 +12,4 @@ helmCharts:
 
 resources:
   - ip-address-pool.yaml
+  - namespace.yaml
