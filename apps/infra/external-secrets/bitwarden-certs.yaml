@@ -39,8 +39,8 @@ spec:
     organizations:
       - external-secrets.io
   dnsNames:
-    - external-secrets-bitwarden-sdk-server.external-secrets.svc.cluster.local
-    - bitwarden-sdk-server.external-secrets.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
+    - bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
     - localhost
   ipAddresses:
     - 127.0.0.1
@@ -71,8 +71,8 @@ metadata:
 spec:
   secretName: bitwarden-tls-certs
   dnsNames:
-    - bitwarden-sdk-server.external-secrets.svc.cluster.local
-    - external-secrets-bitwarden-sdk-server.external-secrets.svc.cluster.local
+    - bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.infra-external-secrets.svc.cluster.local
     - localhost
   ipAddresses:
     - 127.0.0.1
@@ -81,6 +81,26 @@ spec:
     algorithm: RSA
     encoding: PKCS8
     size: 2048
+  issuerRef:
+    name: bitwarden-certificate-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+# Client certificate for Bitwarden Cluster Secret Store
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-client-certs
+spec:
+  secretName: bitwarden-client-certs
+  dnsNames:
+    - bitwarden-secrets-manager.infra-external-secrets.svc.cluster.local
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  usages:
+    - client auth
   issuerRef:
     name: bitwarden-certificate-issuer
     kind: Issuer
