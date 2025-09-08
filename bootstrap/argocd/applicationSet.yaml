@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: apps
-  namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
@@ -38,7 +37,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: apps-infra
-  namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
