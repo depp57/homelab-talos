@@ -67,3 +67,10 @@ spec:
           selfHeal: false # A bit less rigid, allows easy debugging
         syncOptions:
           - CreateNamespace=true
+  templatePatch: |
+    {{ - if eq .path.basename "external-secrets" }}
+    spec:
+      syncPolicy:
+        syncOptions:
+          - ServerSideApply=true 
+    {{ - end }}
