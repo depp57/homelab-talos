@@ -67,6 +67,8 @@ spec:
           selfHeal: false # A bit less rigid, allows easy debugging
         syncOptions:
           - CreateNamespace=true
+  # Custom patches per application.
+  # external-secrets: "Our CRDs have reached the 256KB limit! You have to use server-side-apply in all locations to install them correctly."
   templatePatch: |
     {{- if eq .path.basename "external-secrets" }}
     spec:
