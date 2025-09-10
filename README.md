@@ -120,11 +120,10 @@ Currently, it is a single-node cluster.
 - think of a way to hide bot commits
 - Automatic update dependencies with renovate
 - explain DNS tricks for local LAN
-- documents metallb to enable service with type `LoadBalancer` (yes quite useless for a single node cluster)
-  - But still required, without that you will use service type `ClusterIp` but it only allows ports `30000+`
 - External Secrets Operator : delegates to a proper secret management tool (secret rotation, nice UI, etc.)
   - infisical (free plan) (or bitwarden with https://bitwarden.com/products/secrets-manager/#pricing?)
 - auto backup etcd to s3 (explain why - longhorn storage)
+- doc: metallb disabled since [Cilium replaces it](https://docs.cilium.io/en/stable/network/lb-ipam/).
 
 
 # Disaster recovery
