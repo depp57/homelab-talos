@@ -1,6 +1,6 @@
 # Bootstrap
 
-I'm bootstrapping the cluster by using Talos's `extraManifest` to deploy manifests in this directory at startup:
+I'm bootstrapping the cluster by using Talos's `inlineManifests` to deploy manifests in this directory at startup:
 
 *talos/talconfig.yaml*
 ```yaml
@@ -11,10 +11,15 @@ inlineManifests:
   - ...
 ```
 
-This installs ArgoCD, which then takes over to deploy the remaining manifests from the Git repo.
+This deploys two critical components:
 
-Additionally, a Kubernetes Secret `bitwarden-access-token` is created during bootstrap.
-This secret is required by `External Secrets Operator` to fetch secrets, which in turn is necessary for running the other applications.
+- [Cilium](https://github.com/cilium/cilium): A **C**ontainer **N**etwork **I**nterface (CNI).
+Since no other components can function without a CNI, Cilium must be installed during bootstrap.  
+
+- [ArgoCD](https://github.com/argoproj/argo-cd): Responsible for deploying the remaining manifests from the Git repo.
+
+Additionally, a Kubernetes Secret `bitwarden-access-token` is created.
+This secret is required by [External Secrets Operator](https://github.com/external-secrets/external-secrets) to fetch secrets needed by other workloads.
 
 ## Kustomization
 

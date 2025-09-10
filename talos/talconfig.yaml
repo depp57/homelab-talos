@@ -2,6 +2,8 @@ clusterName: homelab
 endpoint: https://192.168.1.10:6443
 allowSchedulingOnMasters: true
 talosVersion: v1.11.0
+cniConfig:
+  name: none                              # do not deploy a default CNI (flannel), because I use Cilium
 inlineManifests:
   - name: argocd
     contents: "@../bootstrap/argocd/manifest.yaml"
@@ -9,6 +11,14 @@ inlineManifests:
   - name: external-secrets
     contents: "@../bootstrap/external-secrets/bitwarden-secret.yaml"
     skipEnvsubst: true
+  - name: cilium
+    contents: "@../bootstrap/cilium/cilium-install.yaml"
+    skipEnvsubst: true
+patches:
+  - |-                                    # do not deploy kube-proxy, as Cilium replaces it
+    cluster:
+      proxy:
+        disabled: true
 
 nodes:
   - hostname: server1
