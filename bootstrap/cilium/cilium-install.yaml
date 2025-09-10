@@ -94,7 +94,7 @@ metadata:
   name: cilium-cleanup
   namespace: kube-system
 spec:
-  ttlSecondsAfterFinished: 0
+#  ttlSecondsAfterFinished: 0
   template:
     metadata:
       labels:
@@ -121,3 +121,12 @@ spec:
               kubectl delete clusterrolebinding cilium-install || true
 
               echo "Cleanup completed successfully."
+---
+# Finally, creates a loadbalancer IP pool so that Cilium can assign external IPs to LoadBalancer services
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: default
+spec:
+  blocks:
+    - cidr: "192.168.1.10/32"
