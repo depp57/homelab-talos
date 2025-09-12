@@ -1,0 +1,38 @@
+namespaceOverride: infra-prometheus-stack
+
+defaultRules:
+  rules:
+    alertmanager: false # AlertManager is not deployed as I don't need notifications
+    etcd: false         # I don't need etcd metrics
+    kubeProxy: false    # kube-proxy is not deployed (replaced by Cilium)
+    windows: false      # Self documented
+
+alertmanager:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    retention: 30d
+
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - grafana.sachathommet.fr
+    tls:
+      - secretName: certificate-prod-grafana
+        hosts:
+          - grafana.sachathommet.fr
+  sidecar:
+    datasources:
+      alertmanager:
+        enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeProxy:
+  enabled: false
