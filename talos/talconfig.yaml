@@ -29,6 +29,8 @@ nodes:
       secureboot: true
     schematic:
       customization:
+        extraKernelArgs:
+          - cpufreq.default_governor=powersave  # Lower energy consumption by using lowest CPU freq (https://www.talos.dev/v1.11/talos-guides/configuration/performance-tuning/#cpu-scaling & https://docs.kernel.org/admin-guide/pm/cpufreq.html)
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools      # required by longhorn
