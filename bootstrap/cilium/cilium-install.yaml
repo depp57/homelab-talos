@@ -94,12 +94,13 @@ metadata:
   name: cilium-cleanup
   namespace: kube-system
 spec:
-#  ttlSecondsAfterFinished: 0
+  ttlSecondsAfterFinished: 0
   template:
     metadata:
       labels:
         app: cilium-cleanup
     spec:
+      serviceAccountName: cilium-install
       restartPolicy: OnFailure
       tolerations:
         - operator: Exists
