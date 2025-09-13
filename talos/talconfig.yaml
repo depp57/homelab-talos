@@ -26,6 +26,7 @@ nodes:
     ipAddress: 192.168.1.10
     installDisk: /dev/nvme0n1
     machineSpec:
+      useUKI: true
       secureboot: true
     schematic:
       customization:
