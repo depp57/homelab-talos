@@ -3,15 +3,26 @@ namespaceOverride: infra-prometheus-stack
 defaultRules:
   rules:
     alertmanager: false # AlertManager is not deployed as I don't need notifications
-    etcd: false         # I don't need etcd metrics
     kubeProxy: false    # kube-proxy is not deployed (replaced by Cilium)
     windows: false      # Self documented
+    # I also disable the following rules to lower the power draw of my cluster
+    configReloaders: false
+    etcd: false
+    kubelet: false
+    kubeApiserverBurnrate: false
+    kubeApiserverHistogram: false
+    kubeApiserverSlos: false
+    kubeControllerManager: false
+    kubeSchedulerAlerting: false
+    kubeSchedulerRecording: false
+    nodeExporterAlerting: false
 
 alertmanager:
   enabled: false
 
 prometheus:
   prometheusSpec:
+    scrapeInterval: 60s
     retention: 30d
 
 grafana:
