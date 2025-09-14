@@ -10,6 +10,10 @@ server:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     ingressClassName: nginx
     https: true
+    tls:
+      - hosts:
+          - authentik.sachathommet.fr
+        secretName: certificate-prod-authentik
     hosts:
       - authentik.sachathommet.fr
 
