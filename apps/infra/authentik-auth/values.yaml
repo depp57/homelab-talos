@@ -9,6 +9,7 @@ server:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     ingressClassName: nginx
+    https: true
     hosts:
       - authentik.sachathommet.fr
 
