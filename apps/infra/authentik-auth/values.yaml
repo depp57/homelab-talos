@@ -1,6 +1,7 @@
-envFrom:
-  - secretRef:
-      name: authentik-secret
+global:
+  envFrom:
+    - secretRef:
+        name: authentik-secret
 
 server:
   ingress:
