@@ -1,6 +1,7 @@
-envFrom:
-  - secretRef:
-      name: authentik-secret
+global:
+  envFrom:
+    - secretRef:
+        name: authentik-secret
 
 server:
   ingress:
@@ -8,6 +9,10 @@ server:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     ingressClassName: nginx
+    tls:
+      - hosts:
+          - authentik.sachathommet.fr
+        secretName: certificate-prod-authentik
     hosts:
       - authentik.sachathommet.fr
 
