@@ -7,6 +7,9 @@ entries:
     identifiers:
       name: provider/argocd
     attrs:
+      client_id: !Env BLUEPRINT_APPS_ARGOCD_CLIENT_ID
+      client_secret: !Env BLUEPRINT_APPS_ARGOCD_CLIENT_SECRET
+
       authorization_flow:
         !Find [
           authentik_flows.flow,
@@ -45,6 +48,12 @@ entries:
         - !Find [
           authentik_core.propertymapping,
           [ name, "authentik default OAuth Mapping: OpenID 'email'" ],
+        ]
+
+      jwt_federation_sources:
+        - !Find [
+          authentik_sources_oauth.oauthsource,
+          [ name, "source/google" ],
         ]
 
 

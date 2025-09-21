@@ -1,0 +1,35 @@
+version: 1
+metadata:
+  name: Sources - Google
+entries:
+  - id: source
+    model: authentik_sources_oauth.oauthsource
+    identifiers:
+      name: source/google
+    attrs:
+      enabled: true
+      name: Google
+      slug: google
+      provider_type: google
+
+      access_token_url: https://oauth2.googleapis.com/token
+      authorization_code_auth_method: basic_auth
+      authorization_url: https://accounts.google.com/o/oauth2/v2/auth
+      group_matching_mode: identifier
+      user_matching_mode: identifier
+      user_path_template: goauthentik.io/sources/%(slug)s
+
+      consumer_key: !Env BLUEPRINT_SOURCES_GOOGLE_CONSUMER_KEY
+      consumer_secret: !Env BLUEPRINT_SOURCES_GOOGLE_CONSUMER_SECRET
+
+      authentication_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-source-authentication" ],
+        ]
+
+      enrollment_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-source-enrollment" ],
+        ]
