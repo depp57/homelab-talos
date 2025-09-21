@@ -13,6 +13,9 @@ helmCharts:
     includeCRDs: true
     valuesFile: values.yaml
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 configMapGenerator:
   - name: authentik-blueprints
     files:
