@@ -6,3 +6,20 @@ data:
   # Fix: Kustomize 'trouble configuring builtin HelmChartInflationGenerator'
   # See: https://github.com/kubernetes/kubectl/issues/1144#issuecomment-1031030994
   kustomize.buildOptions: "--enable-helm"
+
+  # Enable SSO via Authentik
+  url: https://argocd.sachathommet.fr
+  dex.config: |
+    connectors:
+    - config:
+        issuer: https://authentik.sachathommet.fr/application/o/argo-cd/
+        clientID: $dex.authentik.clientId
+        clientSecret: $dex.authentik.clientSecret
+        insecureEnableGroups: true
+        scopes:
+          - openid
+          - profile
+          - email
+      name: authentik
+      type: oidc
+      id: authentik
