@@ -12,3 +12,12 @@ helmCharts:
     namespace: infra-authentik-auth
     includeCRDs: true
     valuesFile: values.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: authentik-blueprints
+    files:
+      - blueprints/apps-argocd.yaml
+      - blueprints/sources-google.yaml

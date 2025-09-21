@@ -25,3 +25,7 @@ postgresql:
 
 redis:
   enabled: true
+
+blueprints:
+  configMaps:
+    - authentik-blueprints
