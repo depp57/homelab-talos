@@ -24757,6 +24757,20 @@ subjects:
 ---
 apiVersion: v1
 data:
+  dex.config: |-
+    connectors:
+    - config:
+        issuer: https://authentik.sachathommet.fr/application/o/argo-cd/
+        clientID: $dex.authentik.clientId
+        clientSecret: $dex.authentik.clientSecret
+        insecureEnableGroups: true
+        scopes:
+          - openid
+          - profile
+          - email
+      name: authentik
+      type: oidc
+      id: authentik
   kustomize.buildOptions: --enable-helm
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
@@ -24851,6 +24865,7 @@ data:
       - BackgroundScanReport
       - ClusterBackgroundScanReport
       - UpdateRequest
+  url: https://argocd.sachathommet.fr
 kind: ConfigMap
 metadata:
   labels:
@@ -25626,7 +25641,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: public.ecr.aws/docker/library/redis:7.2.7-alpine
+        image: public.ecr.aws/docker/library/redis:8.2.1-alpine
         imagePullPolicy: Always
         name: redis
         ports:
@@ -26592,6 +26607,12 @@ spec:
               key: controller.self.heal.backoff.cooldown.seconds
               name: argocd-cmd-params-cm
               optional: true
+        - name: ARGOCD_SYNC_WAVE_DELAY
+          valueFrom:
+            configMapKeyRef:
+              key: controller.sync.wave.delay.seconds
+              name: argocd-cmd-params-cm
+              optional: true
         - name: ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT
           valueFrom:
             configMapKeyRef:
@@ -26893,6 +26914,28 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
     {{- end }}
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: authentik-secret
+  namespace: infra-argocd
+spec:
+  data:
+  - remoteRef:
+      key: 865b5889-3188-4de8-9d27-b35f010714f1
+    secretKey: dex.authentik.clientId
+  - remoteRef:
+      key: 00f34476-c47a-497d-84c3-b35f01072451
+    secretKey: dex.authentik.clientSecret
+  refreshInterval: 24h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: bitwarden-secretsmanager
+  target:
+    creationPolicy: Merge
+    deletionPolicy: Merge
+    name: argocd-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
