@@ -1,0 +1,61 @@
+version: 1
+metadata:
+  name: Apps - ArgoCD
+entries:
+  - id: provider
+    model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: provider/argocd
+    attrs:
+      authorization_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-provider-authorization-implicit-consent" ],
+        ]
+      signing_key:
+        !Find [
+          authentik_crypto.certificatekeypair,
+          [ name, "authentik Self-signed Certificate" ],
+        ]
+      invalidation_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-provider-invalidation-flow" ],
+        ]
+
+      client_type: confidential
+      redirect_uris:
+        - matching_mode: strict
+          url: https://argocd.sachathommet.fr/api/dex/callback
+
+      access_code_validity: minutes=1
+      access_token_validity: minutes=30
+      refresh_token_validity: days=30
+
+      sub_mode: hashed_user_id
+      property_mappings:
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "authentik default OAuth Mapping: OpenID 'openid'" ],
+        ]
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "authentik default OAuth Mapping: OpenID 'profile'" ],
+        ]
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "OAuth mapping: OpenID 'email' with mailPrimaryAddress" ],
+        ]
+
+
+  - id: application
+    model: authentik_core.application
+    identifiers:
+      name: application/argocd
+    attrs:
+      name: ArgoCD
+      group: infra
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
+      provider: !KeyOf provider
+      policy_engine_mode: any
+      slug: argo-cd
