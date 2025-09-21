@@ -20,3 +20,4 @@ configMapGenerator:
   - name: authentik-blueprints
     files:
       - blueprints/apps-argocd.yaml
+      - blueprints/sources-google.yaml
