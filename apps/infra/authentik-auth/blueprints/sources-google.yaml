@@ -33,3 +33,14 @@ entries:
           authentik_flows.flow,
           [ slug, "default-source-enrollment" ],
         ]
+
+  # Bind the Google email address as a username in Authentik
+  - id: expressionPolicy
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: expressionPolicy/google
+    attrs:
+      expression: |
+        email = request.context["prompt_data"]["email"]
+        request.context["prompt_data"]["username"] = email
+        return False
