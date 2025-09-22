@@ -21,3 +21,4 @@ configMapGenerator:
     files:
       - blueprints/apps-argocd.yaml
       - blueprints/sources-google.yaml
+      - blueprints/default-source-enrollment-write-override.yaml
