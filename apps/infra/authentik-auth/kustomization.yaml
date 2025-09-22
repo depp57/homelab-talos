@@ -19,6 +19,7 @@ generatorOptions:
 configMapGenerator:
   - name: authentik-blueprints
     files:
+      - blueprints/default-authentication-flow-override.yaml
+      - blueprints/default-source-enrollment-write-override.yaml
       - blueprints/apps-argocd.yaml
       - blueprints/sources-google.yaml
-      - blueprints/default-source-enrollment-write-override.yaml
