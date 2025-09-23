@@ -9,5 +9,8 @@ helmCharts:
     includeCRDs: true
     version: 4.13.2
     valuesInline:
+      # Required by Authentik to forward auth to its Proxy Provider
       controller:
-        allowSnippetAnnotations: true # Required by Authentik to forward auth to its Proxy Provider
+        allowSnippetAnnotations: true
+        config:
+          annotations-risk-level: Critical
