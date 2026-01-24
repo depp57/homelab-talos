@@ -1,17 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: infra-authentik-auth
 
 resources:
   - secret.yaml
-
-helmCharts:
-  - name: authentik
-    repo: https://charts.goauthentik.io
-    version: 2025.8.1
-    releaseName: authentik
-    namespace: infra-authentik-auth
-    includeCRDs: true
-    valuesFile: values.yaml
+  - ingress-route.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -23,3 +16,12 @@ configMapGenerator:
       - blueprints/default-source-enrollment-write-override.yaml
       - blueprints/apps-argocd.yaml
       - blueprints/sources-google.yaml
+
+helmCharts:
+  - name: authentik
+    repo: https://charts.goauthentik.io
+    namespace: infra-authentik-auth
+    version: 2025.8.1
+    releaseName: authentik
+    includeCRDs: true
+    valuesFile: values.yaml

@@ -1,0 +1,13 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server-ingress
+spec:
+  routes:
+    - match: Host(`argocd.sachathommet.fr`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          port: https
+  tls:
+    certResolver: letsencrypt-prod

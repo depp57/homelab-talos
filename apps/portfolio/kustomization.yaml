@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: portfolio
 
 resources:
-  - ingress.yaml
+  - ingress-route.yaml
   - deployment.yaml
   - secret.yaml
   - configmap.yaml

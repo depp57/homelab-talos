@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: infra-ingress-traefik
+
+resources:
+  - middlewares.yaml
+  - basic-auth-secret.yaml
+  - ovh-dns-secret.yaml
+
+helmCharts:
+  - name: traefik
+    repo: https://traefik.github.io/charts
+    releaseName: traefik
+    namespace: infra-ingress-traefik
+    includeCRDs: true
+    version: 39.0.0
+    valuesFile: values.yaml

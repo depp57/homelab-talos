@@ -1,14 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: infra-longhorn-storage
 
 resources:
   - namespace.yaml
-  - basic-auth-secret.yaml
+  - ingress-route.yaml
 
 helmCharts:
   - name: longhorn
     repo: https://charts.longhorn.io
-    version: 1.9.1
     namespace: infra-longhorn-storage
+    version: 1.9.1
     includeCRDs: true
     valuesFile: values.yaml

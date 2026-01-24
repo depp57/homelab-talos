@@ -3,19 +3,6 @@ global:
     - secretRef:
         name: authentik-secret
 
-server:
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingressClassName: nginx
-    tls:
-      - hosts:
-          - authentik.sachathommet.fr
-        secretName: certificate-prod-authentik
-    hosts:
-      - authentik.sachathommet.fr
-
 postgresql:
   enabled: true
   auth:

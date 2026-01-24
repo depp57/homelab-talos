@@ -1,0 +1,66 @@
+# Required by Authentik to forward auth to its Proxy Provider (https://docs.goauthentik.io/add-secure-apps/providers/proxy/server_traefik/)
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
+  kubernetesIngress: # Force the usage of IngressRoutes
+    enabled: false
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true" # By default, Traefik verifies the TLS certificate of the internal backend. Previously with nginx I opted for SSL passthrough.
+
+# Configure Traefik to generate TLS certificates for IngressRoutes (https://doc.traefik.io/traefik/expose/kubernetes/#generate-certificates-with-lets-encrypt)
+certificatesResolvers:
+  letsencrypt-prod:
+    acme:
+      email: deppdu5758@gmail.com
+      storage: /data/acme.json
+      dnsChallenge:
+        provider: ovh
+        propagation:
+          delayBeforeChecks: 30
+
+envFrom:
+  - secretRef:
+      name: ovh-dns-credentials
+
+# Store certificates in a persistent volume
+persistence:
+  enabled: true
+  name: traefik-data
+  size: 128Mi
+  path: /data
+
+# Fixes /data/acme.json permissions (https://github.com/traefik/traefik-helm-chart/issues/396#issuecomment-3287251840)
+podSecurityContext:
+  fsGroup: 65532
+  fsGroupChangePolicy: "OnRootMismatch"
+
+ports:
+  web:
+    asDefault: false
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+  websecure:
+    asDefault: true
+    http:
+      tls:
+        certResolver: letsencrypt-prod
+        domains:
+          - main: sachathommet.fr
+            sans: ["*.sachathommet.fr"]
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik.sachathommet.fr`)
+    entryPoints:
+      - websecure
+    middlewares:
+      - name: basic-auth
+
+# metrics: TODO
