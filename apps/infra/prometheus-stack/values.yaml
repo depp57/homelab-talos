@@ -25,6 +25,10 @@ prometheus:
     scrapeInterval: 60s
     retention: 30d
 
+    # Disables this weird behavior:
+    # 'a nil or {} value for serviceMonitorSelector (defaults to {}) will be replaced with matchLabel: <chart-release-name>'
+    serviceMonitorSelectorNilUsesHelmValues: false
+
 grafana:
   sidecar:
     datasources:

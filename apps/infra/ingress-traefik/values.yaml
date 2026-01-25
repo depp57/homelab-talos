@@ -63,4 +63,11 @@ ingressRoute:
     middlewares:
       - name: basic-auth
 
-# metrics: TODO
+metrics:
+  prometheus:
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+    jobLabel: traefik
+    interval: 30s
