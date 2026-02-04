@@ -10,7 +10,7 @@ spec:
         - name: longhorn-frontend
           port: 80
       middlewares:
-        - name: basic-auth
+        - name: forward-auth-authentik
           namespace: infra-ingress-traefik
   tls:
     certResolver: letsencrypt-prod

@@ -61,7 +61,7 @@ ingressRoute:
     entryPoints:
       - websecure
     middlewares:
-      - name: basic-auth
+      - name: forward-auth-authentik
 
 metrics:
   prometheus:
