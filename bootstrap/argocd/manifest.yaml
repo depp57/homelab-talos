@@ -33387,17 +33387,6 @@ spec:
           - ServerSideApply=true
     {{- end }}
 
-    {{- if eq .path.basename "kubernetes-dashboard" }}
-    spec:
-      ignoreDifferences:
-        - group: ""
-          kind: Secret
-          name: kubernetes-dashboard-csrf
-          namespace: infra-kubernetes-dashboard
-          jsonPointers:
-            - /data/private.key
-    {{- end }}
-
     {{- if eq .path.basename "prometheus-stack" }}
     spec:
       syncPolicy:
