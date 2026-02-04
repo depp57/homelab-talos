@@ -17,6 +17,7 @@ configMapGenerator:
       - blueprints/sources-google.yaml
       - blueprints/apps/argocd.yaml
       - blueprints/apps/grafana.yaml
+      - blueprints/apps/forward-auth-domain.yaml
 
 helmCharts:
   - name: authentik
