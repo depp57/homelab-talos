@@ -4,7 +4,6 @@ namespace: infra-ingress-traefik
 
 resources:
   - middlewares.yaml
-  - basic-auth-secret.yaml
   - ovh-dns-secret.yaml
 
 helmCharts:
