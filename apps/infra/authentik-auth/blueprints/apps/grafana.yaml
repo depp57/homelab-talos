@@ -1,0 +1,70 @@
+version: 1
+metadata:
+  name: Apps - Grafana
+entries:
+  - id: provider
+    model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: provider/grafana
+    attrs:
+      client_id: !Env BLUEPRINT_APPS_GRAFANA_CLIENT_ID
+      client_secret: !Env BLUEPRINT_APPS_GRAFANA_CLIENT_SECRET
+
+      authorization_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-provider-authorization-implicit-consent" ],
+        ]
+      signing_key:
+        !Find [
+          authentik_crypto.certificatekeypair,
+          [ name, "authentik Self-signed Certificate" ],
+        ]
+      invalidation_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-provider-invalidation-flow" ],
+        ]
+
+      client_type: confidential
+      redirect_uris:
+        - matching_mode: strict
+          url: https://grafana.sachathommet.fr/login/generic_oauth
+
+      access_code_validity: minutes=1
+      access_token_validity: minutes=30
+      refresh_token_validity: days=30
+
+      sub_mode: hashed_user_id
+      property_mappings:
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "authentik default OAuth Mapping: OpenID 'openid'" ],
+        ]
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "authentik default OAuth Mapping: OpenID 'profile'" ],
+        ]
+        - !Find [
+          authentik_core.propertymapping,
+          [ name, "authentik default OAuth Mapping: OpenID 'email'" ],
+        ]
+
+      jwt_federation_sources:
+        - !Find [
+          authentik_sources_oauth.oauthsource,
+          [ name, "source/google" ],
+        ]
+
+
+  - id: application
+    model: authentik_core.application
+    identifiers:
+      name: application/grafana
+    attrs:
+      name: Grafana
+      group: infra
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
+      provider: !KeyOf provider
+      policy_engine_mode: any
+      slug: grafana
