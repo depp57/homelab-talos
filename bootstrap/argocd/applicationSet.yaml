@@ -67,7 +67,6 @@ spec:
           - CreateNamespace=true
   # Custom patches per application.
   # external-secrets: The CRDs have reached the 256KB limit. Use server-side-apply to install them correctly.
-  # kubernetes-dashboard: The secret 'kubernetes-dashboard-csrf' is automatically updated after the deployment, causing an out-of-sync event
   # kube-prometheus-stack: The CRDs have reached the 256KB limit. Use server-side-apply to install them correctly.
   templatePatch: |
     {{- if eq .path.basename "external-secrets" }}
@@ -78,17 +77,6 @@ spec:
           - ServerSideApply=true
     {{- end }}
 
-    {{- if eq .path.basename "kubernetes-dashboard" }}
-    spec:
-      ignoreDifferences:
-        - group: ""
-          kind: Secret
-          name: kubernetes-dashboard-csrf
-          namespace: infra-kubernetes-dashboard
-          jsonPointers:
-            - /data/private.key
-    {{- end }}
-    
     {{- if eq .path.basename "prometheus-stack" }}
     spec:
       syncPolicy:
