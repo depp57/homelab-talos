@@ -71,3 +71,21 @@ metrics:
       enabled: true
     jobLabel: traefik
     interval: 30s
+
+logs:
+  access:
+    enabled: true
+    format: json
+    fields:
+      general:
+        defaultmode: drop
+        names:
+          ClientHost: keep
+          DownstreamStatus: keep
+          Duration: keep
+          RequestMethod: keep
+          RequestHost: keep
+          RequestPath: keep
+          RequestProtocol: keep
+          RequestScheme: keep
+          entryPointName: keep

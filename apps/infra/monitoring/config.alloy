@@ -1,0 +1,51 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+// INPUTS
+discovery.kubernetes "traefik_pod" {
+  role = "pod"
+  namespaces {
+    names = ["infra-ingress-traefik"]
+  }
+  selectors {
+    role  = "pod"
+    label = "app.kubernetes.io/name=traefik"
+    field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
+  }
+}
+
+// The previous input exports 4 targets, one per containerPort in the pod.
+// Since a single target is required (get logs from pod's STDOUT), keep only one target.
+discovery.relabel "traefik_logs" {
+  targets = discovery.kubernetes.traefik_pod.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_port_name"]
+    regex         = "websecure"
+    action        = "keep"
+  }
+}
+
+loki.source.kubernetes "traefik_logs" {
+  targets    = discovery.relabel.traefik_logs.output
+  forward_to = [loki.process.traefik_process.receiver]
+}
+
+// Drop non-json logs (internal traefik logs)
+loki.process "traefik_process" {
+  forward_to = [loki.write.loki.receiver]
+
+  stage.drop {
+    expression = "^\\s*[^{]"
+  }
+}
+
+
+// OUTPUTS
+loki.write "loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

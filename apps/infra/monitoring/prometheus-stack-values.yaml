@@ -1,4 +1,4 @@
-namespaceOverride: infra-prometheus-stack
+namespaceOverride: infra-monitoring
 
 defaultRules:
   rules:
@@ -29,11 +29,22 @@ prometheus:
     # 'a nil or {} value for serviceMonitorSelector (defaults to {}) will be replaced with matchLabel: <chart-release-name>'
     serviceMonitorSelectorNilUsesHelmValues: false
 
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
 grafana:
+  defaultDashboardsTimezone: Europe/Paris
+
   sidecar:
     datasources:
       alertmanager:
         enabled: false
+
   grafana.ini:
     auth:
       signout_redirect_url: "https://authentik.sachathommet.fr/application/o/grafana/end-session/"
@@ -52,6 +63,7 @@ grafana:
       disable_initial_admin_creation: true
     server:
       root_url: "https://grafana.sachathommet.fr"
+
   extraSecretMounts:
     - name: oauth-secret
       secretName: grafana-oauth
@@ -59,8 +71,28 @@ grafana:
       mountPath: /etc/secrets/oauth
       readOnly: true
 
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki:3100
+
+
+  persistence:
+    enabled: true
+    type: pvc
+    accessModes: ["ReadWriteOnce"]
+    size: 1Gi
+
 kubeEtcd:
   enabled: false
 
 kubeProxy:
   enabled: false
+
+nodeExporter:
+  operatingSystems:
+    aix:
+      enabled: false
+    darwin:
+      enabled: false

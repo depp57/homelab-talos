@@ -1,0 +1,38 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: infra-monitoring
+
+resources:
+  - namespace.yaml
+  - ingress-route.yaml
+  - secret.yaml
+
+helmCharts:
+  - name: kube-prometheus-stack
+    repo: https://prometheus-community.github.io/helm-charts
+    namespace: infra-monitoring
+    version: 81.2.2
+    releaseName: monitoring
+    includeCRDs: true
+    valuesFile: prometheus-stack-values.yaml
+
+  - name: loki
+    repo: https://grafana.github.io/helm-charts
+    namespace: infra-monitoring
+    version: 6.51.0
+    releaseName: loki
+    valuesFile: loki-values.yaml
+
+  - name: alloy
+    repo: https://grafana.github.io/helm-charts
+    namespace: infra-monitoring
+    version: 1.5.3
+    releaseName: alloy
+    valuesFile: alloy-values.yaml
+
+configMapGenerator:
+  - name: alloy-config
+    files:
+      - config.alloy
+    options:
+      disableNameSuffixHash: true # https://grafana.com/docs/alloy/latest/configure/kubernetes/#kustomize-considerations

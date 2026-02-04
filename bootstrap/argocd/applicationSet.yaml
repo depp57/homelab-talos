@@ -77,7 +77,7 @@ spec:
           - ServerSideApply=true
     {{- end }}
 
-    {{- if eq .path.basename "prometheus-stack" }}
+    {{- if eq .path.basename "monitoring" }}
     spec:
       syncPolicy:
         syncOptions:
