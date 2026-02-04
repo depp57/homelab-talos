@@ -6,3 +6,6 @@ talos/clusterconfig
 
 # Kubernetes secrets
 bootstrap/external-secrets/bitwarden-secret.yaml
+
+# Default Helm chart values, saved locally only to debug/test
+default-values.yaml
