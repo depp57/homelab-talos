@@ -47,18 +47,14 @@ git clone https://github.com/depp57/homelab-talos.git
 
 # 2. Install the required tools:
 #   - talosctl: Official Talos CLI
-#       https://www.talos.dev/v1.11/talos-guides/install/talosctl/
+#       https://docs.siderolabs.com/talos/v1.12/getting-started/talosctl
 #   - talhelper: Manage Talos configs declaratively
 #       https://budimanjojo.github.io/talhelper/latest/installation/
 #   - sops: Manage secrets in config files
 #       https://github.com/getsops/sops/releases
 
-# 3. Download the Talos Linux ISO with the required extensions (bare metal, amd64, secure boot enabled)
-wget https://factory.talos.dev/image/613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245/v1.11.0/metal-amd64-secureboot.iso
-
-#   - Alternatively, you can download a base ISO without extensions here:
-#       https://factory.talos.dev/
-#   - Missing extensions will be automatically downloaded during step 7.
+# 3. Download the Talos Linux ISO. Required extensions/kernel modules will be automatically downloaded during step 8.
+wget https://github.com/siderolabs/talos/releases/download/v1.12.2/metal-amd64.iso
 
 # 4. Boot your hardware using the ISO you just downloaded
 #   Ensure secureboot is in 'setup' mode before booting Talos. The ISO bootloader will enroll the keys in the UEFI firmware

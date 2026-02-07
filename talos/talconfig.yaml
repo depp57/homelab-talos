@@ -1,7 +1,7 @@
 clusterName: homelab
 endpoint: https://192.168.1.10:6443
 allowSchedulingOnMasters: true
-talosVersion: v1.11.0
+talosVersion: v1.12.2
 cniConfig:
   name: none                              # do not deploy a default CNI (flannel), because I use Cilium
 inlineManifests:
@@ -31,24 +31,24 @@ nodes:
     schematic:
       customization:
         extraKernelArgs:
-          - cpufreq.default_governor=powersave  # Lower energy consumption by using lowest CPU freq (https://www.talos.dev/v1.11/talos-guides/configuration/performance-tuning/#cpu-scaling & https://docs.kernel.org/admin-guide/pm/cpufreq.html)
+          - cpufreq.default_governor=powersave  # Lower energy consumption by using the lowest CPU freq (https://docs.siderolabs.com/talos/v1.12/configure-your-talos-cluster/system-configuration/performance-tuning#cpu-scaling & https://docs.kernel.org/admin-guide/pm/cpufreq.html)
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools      # required by longhorn
             - siderolabs/util-linux-tools # required by longhorn
     patches:
       - |-                                # required by longhorn
-        - op: add
-          path: /machine/kubelet/extraMounts
-          value:
-            - destination: /var/lib/longhorn
-              type: bind
-              source: /var/lib/longhorn
-              options:
-                - bind
-                - rshared
-                - rw
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
       - |-
-        - op: replace
-          path: /machine/install/wipe
-          value: true
+        machine:
+          install:
+            wipe: true
