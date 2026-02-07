@@ -31342,6 +31342,10 @@ metadata:
   namespace: infra-argocd
 ---
 apiVersion: v1
+data:
+  policy.csv: |
+    g, infra-admin, role:admin
+    g, infra-readonly, role:readonly
 kind: ConfigMap
 metadata:
   labels:
