@@ -10,6 +10,10 @@ csi:
 defaultSettings:
   defaultReplicaCount: 1
 
+defaultBackupStore:
+  backupTarget: "nfs://192.168.1.20:/mnt/k8s_backups"
+  pollInterval: 0
+
 longhornUI:
   replicas: 1
 

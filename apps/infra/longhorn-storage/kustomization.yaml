@@ -5,6 +5,7 @@ namespace: infra-longhorn-storage
 resources:
   - namespace.yaml
   - ingress-route.yaml
+  - recurring-jobs.yaml
 
 helmCharts:
   - name: longhorn

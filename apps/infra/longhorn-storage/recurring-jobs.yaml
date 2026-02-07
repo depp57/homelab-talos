@@ -1,0 +1,22 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: trim-volumes
+spec:
+  cron: "0 2 * * *"       # Every day at 2am
+  task: "filesystem-trim"
+  concurrency: 1
+  groups:
+    - default             # Apply this job to all volumes
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: backup-volumes
+spec:
+  cron: "0 4 * * *"       # Every day at 4am
+  task: "backup"
+  concurrency: 1
+  retain: 1
+  groups:
+    - backup
