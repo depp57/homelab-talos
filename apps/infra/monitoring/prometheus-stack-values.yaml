@@ -9,6 +9,7 @@ defaultRules:
     configReloaders: false
     etcd: false
     kubelet: false
+    kubeApiserverAvailability: false
     kubeApiserverBurnrate: false
     kubeApiserverHistogram: false
     kubeApiserverSlos: false
@@ -35,7 +36,7 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 10Gi
+              storage: 15Gi
 
 grafana:
   defaultDashboardsTimezone: Europe/Paris
@@ -88,6 +89,9 @@ kubeEtcd:
   enabled: false
 
 kubeProxy:
+  enabled: false
+
+kubeApiServer:
   enabled: false
 
 nodeExporter:

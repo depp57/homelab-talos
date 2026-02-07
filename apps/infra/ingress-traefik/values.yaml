@@ -64,13 +64,7 @@ ingressRoute:
       - name: forward-auth-authentik
 
 metrics:
-  prometheus:
-    service:
-      enabled: true
-    serviceMonitor:
-      enabled: true
-    jobLabel: traefik
-    interval: 30s
+  prometheus: null # Disable prometheus metrics. Access logs are enough.
 
 logs:
   access:
