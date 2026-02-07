@@ -72,7 +72,7 @@ talosctl get disks --insecure --nodes <ip_address>
 # 8. Generate and apply Talos config
 cd talos
 talhelper genconfig # Automatically uses talsecret.sops.yaml and decrypt it using sops
-talosctl apply-config --insecure -n <ip_address> -- file ./clusterconfig/homelab-server1.yaml
+talosctl apply-config --insecure -n <ip_address> --file ./clusterconfig/homelab-server1.yaml
 cd ..
 
 # 9. Save Talos config locally to avoid repeating --node and --endpoint parameters
