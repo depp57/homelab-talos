@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kube-system
+
+resources:
+  - lb-ip-pool.yaml
+
+helmCharts:
+  - name: cilium
+    repo: https://helm.cilium.io/
+    releaseName: cilium
+    namespace: kube-system
+    includeCRDs: true
+    version: 1.19.0
+    valuesFile: values.yaml

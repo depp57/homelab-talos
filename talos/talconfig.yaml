@@ -8,11 +8,11 @@ inlineManifests:
   - name: argocd
     contents: "@../bootstrap/argocd/manifest.yaml"
     skipEnvsubst: true
+  - name: cilium
+    contents: "@../bootstrap/cilium/manifest.yaml"
+    skipEnvsubst: true
   - name: external-secrets
     contents: "@../bootstrap/external-secrets/bitwarden-secret.yaml"
-    skipEnvsubst: true
-  - name: cilium
-    contents: "@../bootstrap/cilium/cilium-install.yaml"
     skipEnvsubst: true
 patches:
   - |-                                    # do not deploy kube-proxy, as Cilium replaces it

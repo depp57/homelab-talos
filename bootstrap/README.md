@@ -21,15 +21,12 @@ Since no other components can function without a CNI, Cilium must be installed d
 Additionally, a Kubernetes Secret `bitwarden-access-token` is created.
 This secret is required by [External Secrets Operator](https://github.com/external-secrets/external-secrets) to fetch secrets needed by other workloads.
 
-## Kustomization
+## Generating manifests
 
-Since the [standard Argo CD manifest](https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml) installs
-it in the `default` namespace and lacks custom options, I use Kustomize.
+Since the generated manifests contain sensitive data, they are not committed to Git.
 
-To generate the final manifest, I run:
+Instead, they are generated locally right before bootstrapping the cluster by running the convenient script:
 
 ```shell
-kubectl kustomize bootstrap/argocd > bootstrap/argocd/manifest.yaml
+./generate-manifests.sh
 ```
-
-The generation of this manifest is automated via a GitHub Action defined in `.github/workflows/kustomize-gen-bootstrap.yaml`.

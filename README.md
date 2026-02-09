@@ -62,8 +62,8 @@ wget https://github.com/siderolabs/talos/releases/download/v1.12.2/metal-amd64.i
 # 5. Once you'll see the Talos dashboard, unmount the ISO or unplug the USB drive
 #   This prevents you from accidentally installing to the USB drive
 
-# 6. Decrypt (or create) the bitwarden-secret.sops.yaml file, used by External Secrets Operator
-sops decrypt bootstrap/external-secrets/bitwarden-secret.sops.yaml --output bootstrap/external-secrets/bitwarden-secret.yaml
+# 6. Generate static manifests for services required during bootstrap (e.g. argocd, cilium, external-secrets)
+bash ./bootstrap/generate-manifests.sh
 
 # 7. List your disks, and choose which one to use for the installation
 talosctl get disks --insecure --nodes <ip_address>

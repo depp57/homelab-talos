@@ -4,7 +4,9 @@
 # Talos secrets
 talos/clusterconfig
 
-# Kubernetes secrets
+# Generated bootstrap manifests
+bootstrap/argocd/manifest.yaml
+bootstrap/cilium/manifest.yaml
 bootstrap/external-secrets/bitwarden-secret.yaml
 
 # Default Helm chart values, saved locally only to debug/test
