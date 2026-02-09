@@ -22,25 +22,37 @@ entries:
       consumer_key: !Env BLUEPRINT_SOURCES_GOOGLE_CONSUMER_KEY
       consumer_secret: !Env BLUEPRINT_SOURCES_GOOGLE_CONSUMER_SECRET
 
-      authentication_flow:
-        !Find [
-          authentik_flows.flow,
-          [ slug, "default-source-authentication" ],
-        ]
-
       enrollment_flow:
         !Find [
           authentik_flows.flow,
           [ slug, "default-source-enrollment" ],
         ]
 
+      authentication_flow:
+        !Find [
+          authentik_flows.flow,
+          [ slug, "default-source-authentication" ],
+        ]
+
   # Bind the Google email address as a username in Authentik
   - id: expressionPolicy
     model: authentik_policies_expression.expressionpolicy
     identifiers:
-      name: expressionPolicy/google
+      name: expressionPolicy/bind-email-to-username
     attrs:
       expression: |
         email = request.context["prompt_data"]["email"]
         request.context["prompt_data"]["username"] = email
         return False
+
+  - id: expressionPolicyBinding
+    model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "expressionPolicy/bind-email-to-username"]]
+      target: !Find [authentik_flows.flowstagebinding, [
+        stage,
+        !Find [authentik_stages_prompt.promptstage, [name, "default-source-enrollment-prompt"]]
+      ]]
+    attrs:
+      enabled: true
