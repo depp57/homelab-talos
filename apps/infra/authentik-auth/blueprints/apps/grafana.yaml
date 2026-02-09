@@ -68,3 +68,12 @@ entries:
       provider: !KeyOf provider
       policy_engine_mode: any
       slug: grafana
+
+  - id: expressionPolicyBinding
+    model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      group: !Find [authentik_core.group, [name, "infra-admin"]]
+      target: !KeyOf application
+    attrs:
+      enabled: true
