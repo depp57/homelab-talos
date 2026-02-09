@@ -35,7 +35,7 @@ entries:
         ]
 
   # Bind the Google email address as a username in Authentik
-  - id: expressionPolicy
+  - id: policy-bind-email-to-username
     model: authentik_policies_expression.expressionpolicy
     identifiers:
       name: expressionPolicy/bind-email-to-username
@@ -54,5 +54,33 @@ entries:
         stage,
         !Find [authentik_stages_prompt.promptstage, [name, "default-source-enrollment-prompt"]]
       ]]
+    attrs:
+      enabled: true
+
+  # Automatically assign myself as an infra-admin
+  - id: policy-auto-assign-admin
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: expressionPolicy/assign-myself-admin
+    attrs:
+      expression: |
+        email = request.context["prompt_data"]["email"]
+        if email == "deppdu5758@gmail.com":
+          from authentik.core.models import Group
+          group, _ = Group.objects.get_or_create(name="infra-admin")
+          
+          request.context["flow_plan"].context["groups"] = [group]
+          
+          return True
+
+  - id: expressionPolicyBinding
+    model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !Find [ authentik_policies_expression.expressionpolicy, [ name, "expressionPolicy/assign-myself-admin" ] ]
+      target: !Find [ authentik_flows.flowstagebinding, [
+        stage,
+        !Find [ authentik_stages_prompt.promptstage, [ name, "default-source-enrollment-write" ] ]
+      ] ]
     attrs:
       enabled: true
