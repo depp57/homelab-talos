@@ -1,0 +1,16 @@
+version: 1
+metadata:
+  name: Default groups - override
+entries:
+  - id: group-admin
+    model: authentik_core.group
+    identifiers:
+      name: "authentik Admins"
+    attrs:
+      name: "infra-admin"
+  - id: group-readonly
+    model: authentik_core.group
+    identifiers:
+      name: "authentik Readers"
+    attrs:
+      name: "infra-readonly"

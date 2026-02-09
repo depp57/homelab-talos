@@ -1,0 +1,10 @@
+version: 1
+metadata:
+  name: Default outpost - override
+entries:
+  - id: outpost
+    model: authentik_outposts.outpost
+    identifiers:
+      name: "authentik Embedded Outpost"
+    attrs:
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [ name, "Local Kubernetes Cluster" ]]
