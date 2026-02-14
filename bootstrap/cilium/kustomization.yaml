@@ -11,5 +11,5 @@ helmCharts:
     releaseName: cilium
     namespace: kube-system
     includeCRDs: true
-    version: 1.19.0
+    version: 1.18.7 # As of feb 14, 2026 v1.19.0 is broken with talos 1.12. See https://github.com/cilium/cilium/issues/44216
     valuesFile: values.yaml
