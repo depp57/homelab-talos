@@ -2,7 +2,7 @@ version: 1
 metadata:
   name: Sources - Google
 entries:
-  - id: source
+  - id: google_source
     model: authentik_sources_oauth.oauthsource
     identifiers:
       name: source/google
@@ -35,7 +35,7 @@ entries:
         ]
 
   # Bind the Google email address as a username in Authentik
-  - id: policy-bind-email-to-username
+  - id: google_policy_email_to_username
     model: authentik_policies_expression.expressionpolicy
     identifiers:
       name: expressionPolicy/bind-email-to-username
@@ -45,11 +45,11 @@ entries:
         request.context["prompt_data"]["username"] = email
         return False
 
-  - id: expressionPolicyBinding
+  - id: google_policy_binding_email_to_username
     model: authentik_policies.policybinding
     identifiers:
       order: 0
-      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "expressionPolicy/bind-email-to-username"]]
+      policy: !KeyOf "google_policy_email_to_username"
       target: !Find [authentik_flows.flowstagebinding, [
         stage,
         !Find [authentik_stages_prompt.promptstage, [name, "default-source-enrollment-prompt"]]
@@ -58,7 +58,7 @@ entries:
       enabled: true
 
   # Automatically assign myself as an infra-admin
-  - id: policy-auto-assign-admin
+  - id: google_policy_auto_assign_admin
     model: authentik_policies_expression.expressionpolicy
     identifiers:
       name: expressionPolicy/assign-myself-admin
@@ -73,14 +73,14 @@ entries:
           
           return True
 
-  - id: expressionPolicyBinding
+  - id: google_policy_binding_auto_assign_admin
     model: authentik_policies.policybinding
     identifiers:
       order: 0
-      policy: !Find [ authentik_policies_expression.expressionpolicy, [ name, "expressionPolicy/assign-myself-admin" ] ]
-      target: !Find [ authentik_flows.flowstagebinding, [
+      policy: !KeyOf "google_policy_auto_assign_admin"
+      target: !Find [authentik_flows.flowstagebinding, [
         stage,
-        !Find [ authentik_stages_prompt.promptstage, [ name, "default-source-enrollment-write" ] ]
-      ] ]
+        !Find [authentik_stages_user_write.userwritestage, [name, "default-source-enrollment-write"]]
+      ]]
     attrs:
       enabled: true

@@ -2,7 +2,7 @@ version: 1
 metadata:
   name: Apps - Forward auth @ Domain level
 entries:
-  - id: provider
+  - id: forward_auth_provider
     model: authentik_providers_proxy.proxyprovider
     identifiers:
       name: provider/forward-auth-domain-proxy
@@ -33,14 +33,14 @@ entries:
         - !Find [authentik_core.propertymapping, [ name, "authentik default OAuth Mapping: OpenID 'profile'" ]]
         - !Find [authentik_core.propertymapping, [ name, "authentik default OAuth Mapping: OpenID 'email'" ]]
 
-  - id: application
+  - id: forward_auth_application
     model: authentik_core.application
     identifiers:
       name: application/forward-auth-domain
     attrs:
       name: Forward Auth @ Domain level
       group: infra
-      provider: !KeyOf provider
+      provider: !KeyOf "forward_auth_provider"
       policy_engine_mode: any
       slug: forward-auth-domain
 
@@ -48,15 +48,13 @@ entries:
       pk: !Find [ authentik_outposts.outpost, [ name, authentik Embedded Outpost ] ]
     model: authentik_outposts.outpost
     attrs:
-      providers: [!KeyOf provider]
+      providers: [!KeyOf "forward_auth_provider"]
       config:
         authentik_host: "https://authentik.sachathommet.fr"
 
-  - id: expressionPolicyBinding
-    model: authentik_policies.policybinding
+  - model: authentik_policies.policybinding
     identifiers:
-      order: 0
+      target: !KeyOf "forward_auth_application"
       group: !Find [authentik_core.group, [name, "infra-admin"]]
-      target: !KeyOf application
     attrs:
-      enabled: true
+      order: 0

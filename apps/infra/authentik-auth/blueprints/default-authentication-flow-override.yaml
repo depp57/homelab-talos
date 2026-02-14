@@ -2,13 +2,9 @@ version: 1
 metadata:
   name: Default authentication flow - override
 entries:
-  - id: stage
-    model: authentik_stages_identification.identificationstage
+  - model: authentik_stages_identification.identificationstage
     identifiers:
       name: default-authentication-identification
     attrs:
       sources:
-        - !Find [
-          authentik_sources_oauth.oauthsource,
-          [ name, "source/google" ],
-        ]
+        - !Find [authentik_sources_oauth.oauthsource, [ name, "source/google" ]]

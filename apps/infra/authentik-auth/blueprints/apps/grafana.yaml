@@ -2,7 +2,7 @@ version: 1
 metadata:
   name: Apps - Grafana
 entries:
-  - id: provider
+  - id: grafana_provider
     model: authentik_providers_oauth2.oauth2provider
     identifiers:
       name: provider/grafana
@@ -50,30 +50,20 @@ entries:
           [ name, "authentik default OAuth Mapping: OpenID 'email'" ],
         ]
 
-      jwt_federation_sources:
-        - !Find [
-          authentik_sources_oauth.oauthsource,
-          [ name, "source/google" ],
-        ]
-
-
-  - id: application
+  - id: grafana_application
     model: authentik_core.application
     identifiers:
       name: application/grafana
     attrs:
-      name: Grafana
       group: infra
       icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
-      provider: !KeyOf provider
+      provider: !KeyOf "grafana_provider"
       policy_engine_mode: any
       slug: grafana
 
-  - id: expressionPolicyBinding
-    model: authentik_policies.policybinding
+  - model: authentik_policies.policybinding
     identifiers:
-      order: 0
+      target: !KeyOf "grafana_application"
       group: !Find [authentik_core.group, [name, "infra-admin"]]
-      target: !KeyOf application
     attrs:
-      enabled: true
+      order: 0

@@ -2,8 +2,7 @@ version: 1
 metadata:
   name: Default source enrollment write - override
 entries:
-  - id: source
-    model: authentik_stages_user_write.userwritestage
+  - model: authentik_stages_user_write.userwritestage
     identifiers:
       name: default-source-enrollment-write
     attrs:

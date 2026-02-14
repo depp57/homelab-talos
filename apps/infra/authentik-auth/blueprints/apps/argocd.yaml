@@ -2,7 +2,7 @@ version: 1
 metadata:
   name: Apps - ArgoCD
 entries:
-  - id: provider
+  - id: argocd_provider
     model: authentik_providers_oauth2.oauth2provider
     identifiers:
       name: provider/argocd
@@ -30,6 +30,8 @@ entries:
       redirect_uris:
         - matching_mode: strict
           url: https://argocd.sachathommet.fr/api/dex/callback
+        - matching_mode: strict
+          url: https://localhost:8085/auth/callback
 
       access_code_validity: minutes=1
       access_token_validity: minutes=30
@@ -50,30 +52,20 @@ entries:
           [ name, "authentik default OAuth Mapping: OpenID 'email'" ],
         ]
 
-      jwt_federation_sources:
-        - !Find [
-          authentik_sources_oauth.oauthsource,
-          [ name, "source/google" ],
-        ]
-
-
-  - id: application
+  - id: argocd_application
     model: authentik_core.application
     identifiers:
       name: application/argocd
     attrs:
-      name: ArgoCD
       group: infra
       icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
-      provider: !KeyOf provider
+      provider: !KeyOf "argocd_provider"
       policy_engine_mode: any
       slug: argo-cd
 
-  - id: expressionPolicyBinding
-    model: authentik_policies.policybinding
+  - model: authentik_policies.policybinding
     identifiers:
-      order: 0
+      target: !KeyOf "argocd_application"
       group: !Find [authentik_core.group, [name, "infra-admin"]]
-      target: !KeyOf application
     attrs:
-      enabled: true
+      order: 0
