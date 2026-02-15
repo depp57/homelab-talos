@@ -11,6 +11,6 @@ helmCharts:
   - name: longhorn
     repo: https://charts.longhorn.io
     namespace: infra-longhorn-storage
-    version: 1.9.1
+    version: 1.10.2
     includeCRDs: true
     valuesFile: values.yaml
