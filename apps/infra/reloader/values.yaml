@@ -1,0 +1,4 @@
+reloader:
+  # Reload every workload by default,
+  # without requiring per-resource `reloader.stakater.com/auto: "true"` annotations.
+  autoReloadAll: true
