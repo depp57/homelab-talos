@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+data:
+  # Used to build links to the ArgoCD UI inside Discord embeds.
+  context: |
+    argocdUrl: https://argocd.sachathommet.fr
+
+  service.webhook.discord: |
+    url: $discord-webhook-url
+    headers:
+      - name: Content-Type
+        value: application/json
+
+  template.app-not-healthy: |
+    webhook:
+      discord:
+        method: POST
+        body: |
+          {
+            "username": "ArgoCD",
+            "embeds": [
+              {
+                "title": "Application not healthy: {{.app.metadata.name}}",
+                "url": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+                "color": 15158332,
+                "fields": [
+                  { "name": "Sync",     "value": "{{.app.status.sync.status}}",   "inline": true },
+                  { "name": "Health",   "value": "{{.app.status.health.status}}", "inline": true },
+                  { "name": "Revision", "value": "{{.app.status.sync.revision}}", "inline": false }
+                ]
+              }
+            ]
+          }
+
+  # Single trigger covering anything that means "go check ArgoCD":
+  trigger.on-not-healthy: |
+    - description: Application health is Degraded or Missing
+      when: app.status.health.status in ['Degraded', 'Missing']
+      oncePer: app.status.sync.revision
+      send: [app-not-healthy]
+    - description: Sync operation errored or failed
+      when: app.status.operationState != nil and app.status.operationState.phase in ['Error', 'Failed']
+      oncePer: app.status.operationState.syncResult.revision
+      send: [app-not-healthy]
+    - description: Application is OutOfSync
+      when: app.status.sync.status == 'OutOfSync'
+      oncePer: app.status.sync.revision
+      send: [app-not-healthy]
+
+  # Every ArgoCD apps subscribe to this notification per default.
+  subscriptions: |
+    - recipients:
+        - discord
+      triggers:
+        - on-not-healthy

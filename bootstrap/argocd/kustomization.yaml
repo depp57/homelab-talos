@@ -7,7 +7,7 @@ resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/refs/heads/master/manifests/install.yaml
   - ingress-route.yaml
   - applicationSet.yaml
-  - secret.yaml
+  - secrets.yaml
 
 patches:
   - patch: |-
@@ -18,3 +18,4 @@ patches:
       kind: ClusterRoleBinding
   - path: argocd-cm-patch.yaml
   - path: argocd-rbac-cm-patch.yaml
+  - path: argocd-notifications-cm-patch.yaml
