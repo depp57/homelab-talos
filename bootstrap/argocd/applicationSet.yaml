@@ -68,6 +68,7 @@ spec:
   # Custom patches per application.
   # external-secrets: The CRDs have reached the 256KB limit. Use server-side-apply to install them correctly.
   # kube-prometheus-stack: The CRDs have reached the 256KB limit. Use server-side-apply to install them correctly.
+  # cnpg: The CRDs have reached the 256KB limit. Use server-side-apply to install them correctly.
   templatePatch: |
     {{- if eq .path.basename "external-secrets" }}
     spec:
@@ -78,6 +79,14 @@ spec:
     {{- end }}
 
     {{- if eq .path.basename "monitoring" }}
+    spec:
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+    {{- end }}
+    
+    {{- if eq .path.basename "cn-postgres" }}
     spec:
       syncPolicy:
         syncOptions:
