@@ -9,6 +9,23 @@ controllers:
       main:
         image:
           tag: v2.7.5
+        env:
+          DB_HOSTNAME: immich-database-rw
+          DB_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-app
+                key: username
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-app
+                key: password
+          DB_DATABASE_NAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-app
+                key: dbname
 
 valkey:
   enabled: true
