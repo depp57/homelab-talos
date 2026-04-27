@@ -1,0 +1,17 @@
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          tag: v2.7.5
+
+valkey:
+  enabled: true
+  persistence:
+    data:
+      enabled: false
