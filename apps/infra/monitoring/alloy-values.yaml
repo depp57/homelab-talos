@@ -5,6 +5,7 @@ configReloader:
   enabled: false
 
 alloy:
+  enableReporting: false
   configMap:
     create: false
     name: alloy-config

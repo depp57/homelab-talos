@@ -47,6 +47,9 @@ grafana:
         enabled: false
 
   grafana.ini:
+    analytics:
+      reporting_enabled: false
+      check_for_plugin_updates: false
     auth:
       signout_redirect_url: "https://authentik.sachathommet.fr/application/o/grafana/end-session/"
       oauth_auto_login: true

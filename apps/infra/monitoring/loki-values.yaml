@@ -1,6 +1,8 @@
 # Install loki in monolithic, single-replica mode
 # See: https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/#single-replica
 loki:
+  analytics:
+    reporting_enabled: false
   auth_enabled: false
 
   commonConfig:
@@ -22,7 +24,7 @@ loki:
   limits_config:
     retention_period: 30d
 
-deploymentMode: SingleBinary
+deploymentMode: Monolithic
 
 test:
   enabled: false
