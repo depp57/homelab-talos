@@ -7,6 +7,7 @@ resources:
   - ingress-route.yaml
   - secret.yaml
   - dashboards/nodes.yaml
+  - dashboards/traefik-logs.yaml
 
 helmCharts:
   - name: kube-prometheus-stack
