@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - ingress-route.yaml
   - secret.yaml
+  - dashboards/nodes.yaml
 
 helmCharts:
   - name: kube-prometheus-stack

@@ -42,6 +42,9 @@ grafana:
   defaultDashboardsTimezone: Europe/Paris
 
   sidecar:
+    dashboards:
+      enabled: true
+      skipReload: true
     datasources:
       alertmanager:
         enabled: false
