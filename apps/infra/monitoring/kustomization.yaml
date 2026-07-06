@@ -11,7 +11,7 @@ helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
     namespace: infra-monitoring
-    version: 82.0.0
+    version: 87.9.0
     releaseName: monitoring
     includeCRDs: true
     valuesFile: prometheus-stack-values.yaml
