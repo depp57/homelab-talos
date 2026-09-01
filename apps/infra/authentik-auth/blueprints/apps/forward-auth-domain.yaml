@@ -14,7 +14,6 @@ entries:
 
       mode: forward_domain
       cookie_domain: sachathommet.fr
-      authentification_url: "https://authentik.sachathommet.fr"
       external_host: "https://authentik.sachathommet.fr"
       intercept_header_auth: true
       internal_host_ssl_validation: true
