@@ -34,6 +34,30 @@ entries:
           [ slug, "default-source-authentication" ],
         ]
 
+  # Finds default stage bindings, so !KeyOf can reference them below.
+  # I tried to use !Find instead of this trick, but it returns the model's own pk (fsb_uuid) instead of its PolicyBindingModel pk (pbm_uuid).
+  - id: enrollment_prompt_stage_binding
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [ slug, "default-source-enrollment" ]]
+      stage: !Find [authentik_stages_prompt.promptstage, [ name, "default-source-enrollment-prompt" ]]
+      order: 0
+    attrs:
+      evaluate_on_plan: false
+      re_evaluate_policies: true
+      invalid_response_action: retry
+
+  - id: enrollment_write_stage_binding
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [ slug, "default-source-enrollment" ]]
+      stage: !Find [authentik_stages_user_write.userwritestage, [ name, "default-source-enrollment-write" ]]
+      order: 1
+    attrs:
+      evaluate_on_plan: false
+      re_evaluate_policies: true
+      invalid_response_action: retry
+
   # Bind the Google email address as a username in Authentik
   - id: google_policy_email_to_username
     model: authentik_policies_expression.expressionpolicy
@@ -50,10 +74,7 @@ entries:
     identifiers:
       order: 0
       policy: !KeyOf "google_policy_email_to_username"
-      target: !Find [authentik_flows.flowstagebinding, [
-        stage,
-        !Find [authentik_stages_prompt.promptstage, [name, "default-source-enrollment-prompt"]]
-      ]]
+      target: !KeyOf "enrollment_prompt_stage_binding"
     attrs:
       enabled: true
 
@@ -78,9 +99,6 @@ entries:
     identifiers:
       order: 0
       policy: !KeyOf "google_policy_auto_assign_admin"
-      target: !Find [authentik_flows.flowstagebinding, [
-        stage,
-        !Find [authentik_stages_user_write.userwritestage, [name, "default-source-enrollment-write"]]
-      ]]
+      target: !KeyOf "enrollment_write_stage_binding"
     attrs:
       enabled: true
