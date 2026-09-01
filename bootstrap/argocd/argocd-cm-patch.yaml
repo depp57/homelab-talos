@@ -8,7 +8,8 @@ data:
   kustomize.buildOptions: "--enable-helm"
 
   # Enable SSO via Authentik
-  url: https://argocd.sachathommet.fr
+  url: "https://argocd.sachathommet.fr"
+  admin.enabled: "false"
   dex.config: |
     connectors:
     - config:
