@@ -13,7 +13,7 @@ helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
     namespace: infra-monitoring
-    version: 87.9.0
+    version: 88.6.2
     releaseName: monitoring
     includeCRDs: true
     valuesFile: prometheus-stack-values.yaml
@@ -21,14 +21,14 @@ helmCharts:
   - name: loki
     repo: oci://ghcr.io/grafana-community/helm-charts
     namespace: infra-monitoring
-    version: 17.1.1
+    version: 18.11.7
     releaseName: loki
     valuesFile: loki-values.yaml
 
   - name: alloy
     repo: https://grafana.github.io/helm-charts
     namespace: infra-monitoring
-    version: 1.5.3
+    version: 1.12.1
     releaseName: alloy
     valuesFile: alloy-values.yaml
 
