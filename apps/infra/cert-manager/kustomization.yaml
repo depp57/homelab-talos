@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: cert-manager
     repo: oci://quay.io/jetstack/charts
-    version: 1.19.2
+    version: 1.21.1
     releaseName: cert-manager
     namespace: infra-cert-manager
     includeCRDs: true
