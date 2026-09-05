@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: qbittorrent
+spec:
+  routes:
+    - match: Host(`qbit.netflix.sachathommet.fr`)
+      kind: Rule
+      services:
+        - name: qbittorrent
+          port: 8080
+      middlewares:
+        - name: forward-auth-authentik
+          namespace: infra-ingress-traefik
+  tls:
+    certResolver: letsencrypt-prod

@@ -1,0 +1,13 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jellyfin
+spec:
+  routes:
+    - match: Host(`netflix.sachathommet.fr`)
+      kind: Rule
+      services:
+        - name: jellyfin
+          port: http
+  tls:
+    certResolver: letsencrypt-prod

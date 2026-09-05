@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: linuxserver/jellyfin:latest
+          imagePullPolicy: Always
+          env:
+            - name: "PUID"
+              value: "65534"
+            - name: "PGID"
+              value: "65534"
+            - name: "TZ"
+              value: "UTC"
+          ports:
+            - containerPort: 8096
+              name: http
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /health
+            periodSeconds: 600
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            # runAsNonRoot: true https://docs.linuxserver.io/misc/non-root/
+            # capabilities:
+            #   drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /config
+              name: jellyfin-config
+            - mountPath: /data
+              name: jellyfin-data
+
+      volumes:
+        - name: jellyfin-config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: jellyfin-data
+          persistentVolumeClaim:
+            claimName: media-downloads

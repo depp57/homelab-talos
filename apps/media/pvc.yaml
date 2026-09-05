@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-downloads
+spec:
+  # jellyfin and qbittorrent are both scheduled on the same node (single node cluster).
+  # In Longhorn, RWO is better for performance (no NFS pod in front of the volume), so I keep RWO.
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 200Gi

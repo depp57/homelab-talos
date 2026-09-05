@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      dnsPolicy: None # Uses Gluetun's own DNS, so name resolution goes though the VPN
+      dnsConfig:
+        nameservers: ["127.0.0.1"]
+      initContainers:
+        - name: gluetun
+          image: qmcgaw/gluetun:v3.41.3
+          restartPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            # runAsNonRoot: true https://docs.linuxserver.io/misc/non-root/
+            capabilities:
+              add: [NET_ADMIN]
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: "VPN_SERVICE_PROVIDER"
+              value: "protonvpn"
+            - name: "VPN_TYPE"
+              value: "wireguard"
+            - name: "WIREGUARD_ADDRESSES"
+              value: "10.2.0.2/32"
+            - name: "SERVER_COUNTRIES"
+              value: "Netherlands"
+            - name: "VPN_PORT_FORWARDING"
+              value: "on"
+            - name: "PORT_FORWARD_ONLY" # Use only VPN servers capable of port forwarding
+              value: "on"
+            - name: "VPN_PORT_FORWARDING_UP_COMMAND"
+              value: "/bin/sh /scripts/update-qbit-config.sh {{PORTS}}"
+            - name: "FIREWALL_INPUT_PORTS"
+              value: "8080"
+            - name: "TZ"
+              value: "UTC"
+          envFrom:
+            - secretRef:
+                name: gluetun-wg-private-key
+          volumeMounts:
+            - mountPath: /dev/net/tun
+              name: tun
+            - mountPath: /scripts
+              name: prefs
+          startupProbe:
+            exec:
+              command: ["/gluetun-entrypoint", "healthcheck"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 60
+      containers:
+        - name: qbittorrent
+          image: linuxserver/qbittorrent:latest
+          imagePullPolicy: Always
+          env:
+            - name: "PUID"
+              value: "65534"
+            - name: "PGID"
+              value: "65534"
+            - name: "TZ"
+              value: "UTC"
+            - name: "WEBUI_PORT"
+              value: "8080"
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 600
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            # runAsNonRoot: true https://docs.linuxserver.io/misc/non-root/
+            # capabilities:
+            #   drop: [ "ALL" ]
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /downloads
+              name: downloads
+
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: prefs
+          configMap:
+            name: qbittorrent-script
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: media-downloads
+        - name: tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice
